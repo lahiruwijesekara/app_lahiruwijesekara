@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: myapp
+ labels:
+  app: myapp
+spec:
+ replicas: 4
+ selector:
+  matchLabels:
+   app: myapp
+ template:
+  metadata: 
+   labels:
+    app: myapp
+  spec:
+   containers:
+   - name: myapp
+     image: lahirume/i-lahiruwijesekara-develop:latest
+     ports:
+     - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  type: LoadBalancer
+  selector:
+    app: myapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-backend-api
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /addStudent/
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
+  - http:
+      paths:
+      - path: /deleteStudent/
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
