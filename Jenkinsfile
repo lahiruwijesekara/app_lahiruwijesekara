@@ -2,10 +2,6 @@ pipeline {
 
 	agent any
 	
-	tools{
-		maven "Maven"
-	}
-	
 	environment{
 		PROJECT_ID = 'pure-tracer-360211'
 		CLUSTER_NAME = 'kubernetes-cluster-lahiruwijesekara'
