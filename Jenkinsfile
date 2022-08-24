@@ -54,7 +54,7 @@ pipeline {
         				echo "Push Docker Image"
         				withCredentials([string(credentialsId:'lahirume',variable:'dockerhub')]){
         				bat "docker login -u lahirume -p ${lahirume}"
-        				IMAGE_NAME.push("i-lahiruwijesekara-"+env:BRANCH_NAME+env:BUILD_ID)
+        				IMAGE_NAME.push("i-lahiruwijesekara-"+${env.BUILD_ID})
         				}
         			}
         	}
