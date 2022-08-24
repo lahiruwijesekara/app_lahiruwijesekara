@@ -26,7 +26,7 @@ pipeline {
 				-Dsonar.projectKey=sonar-lahiruwijesekara \\
 				-Dsonar.host.url=http://localhost:9000 \\
 				-Dsonar.login=admin \\
-				-Dsonar.password=admin'''
+				-Dsonar.password=17057@Nagarro'''
             }
         }
 		stage('Docker build') {
