@@ -1,5 +1,9 @@
 pipeline {
-
+	agent {
+            node {
+                label "develop"  //change this as per your agent label
+            }
+        }
    stages {
         stage('Build') {
             steps {
