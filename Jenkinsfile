@@ -25,7 +25,8 @@ pipeline {
                 bat returnStatus: true, script: '''mvn clean verify sonar:sonar \\
 				-Dsonar.projectKey=sonar-lahiruwijesekara \\
 				-Dsonar.host.url=http://localhost:9000 \\
-				-Dsonar.login=425fa56dcc854017950bb9633226ca44'''
+				-Dsonar.login=admin \\
+				-Dsonar.password=17057@Nagarro'''
             }
         }
 		stage('Docker build') {
