@@ -48,8 +48,8 @@ pipeline {
         	steps{
         			script{
         				echo "Push Docker Image"
-        				withCredentials([string(credentialsId:'lahirume',variable:'dockerhub')]){
-        				bat "docker login -u lahirume -p ${lahirume}"
+        				withCredentials([string(credentialsId:'dockerhub',variable:'dockerhub')]){
+        				bat "docker login -u lahirume -p ${dockerhub}"
         				IMAGE_NAME.push("i-lahiruwijesekara-"+${env.BUILD_ID})
         				}
         			}
