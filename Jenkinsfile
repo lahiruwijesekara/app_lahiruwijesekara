@@ -1,9 +1,7 @@
 pipeline {
-	agent {
-            node {
-                label "develop"  //change this as per your agent label
-            }
-        }
+
+	agent any
+
    stages {
         stage('Build') {
             steps {
