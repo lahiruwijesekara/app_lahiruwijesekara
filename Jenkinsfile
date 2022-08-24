@@ -39,7 +39,7 @@ pipeline {
         }
 		stage('Docker build') {
             steps {
-                withEnv(['IMAGE_NAME=\'i-lahiruwijesekara-\'+env:BRANCH_NAME+\':latest\'']) {
+                withEnv(['IMAGE_NAME=\'lahirume/i-lahiruwijesekara-\'+env:BRANCH_NAME+\':latest\'']) {
 					bat returnStatus: true, script: 'docker build -t env:IMAGE_NAME .'
 				}
             }
@@ -50,21 +50,23 @@ pipeline {
         				echo "Push Docker Image"
         				withCredentials([string(credentialsId:'dockerhub',variable:'dockerhub')]){
         				bat "docker login -u lahirume -p ${dockerhub}"
-        				bat "docker push env:IMAGE_NAME"
+        				bat "docker push ${env:IMAGE_NAME}"
         				}
         			}
         	}
         }
-        stage('Deploy to K8s') {
+        stage('Deploy to Dev K8s') {
+        when {
+                branch 'develop'
+            }
 		    steps{
-			    echo "Deployment started ..."
-			    bat 'ls -ltr'
-			    bat 'pwd'
-				bat "sed -i 's/tagversion/env:IMAGE_NAME/g' deployment.yaml"
-				echo "Start deployment of deployment.yaml"
-				step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-			    echo "Deployment Finished ..."
-		    }
+			    withCredentials([file(credentialsId: 'kubernetes', variable: 'GC_KEY')]) {
+			    bat("gcloud auth activate-service-account --key-file=${GC_KEY}")
+			    bat("gcloud container clusters get-credentials kubernetes-cluster-lahiruwijesekara --region us-central1 --project pure-tracer-360211")
+			  	bat("kubectl config set-context --current --namespace=develop")
+			  	bat("kubectl apply -f deployment.yml")
+			  }
+			 }
 	    }
      }
   }

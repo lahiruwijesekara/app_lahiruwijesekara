@@ -16,7 +16,7 @@ spec:
   spec:
    containers:
    - name: myapp
-     image: lahirume/devops:tagversion
+     image: lahirume/i-lahiruwijesekara-develop:latest
      ports:
      - containerPort: 8080
 
@@ -33,3 +33,31 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
+      
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-backend-api
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /addStudent/
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
+  - http:
+      paths:
+      - path: /deleteStudent/
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
