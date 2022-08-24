@@ -55,11 +55,16 @@ pipeline {
         			}
         	}
         }
-        stage('Kube Deployement') {
-            steps {
-                bat 'gcloud auth application-default login  --no-launch-browser'
-				bat 'gcloud container clusters get-credentials kubernetes-cluster-lahiruwijesekara --region us-central1 --project pure-tracer-360211'
-				}
-            }
-        }
-    }
+        stage('Deploy to K8s') {
+		    steps{
+			    echo "Deployment started ..."
+			    bat 'ls -ltr'
+			    bat 'pwd'
+				bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deployment.yaml"
+				echo "Start deployment of deployment.yaml"
+				step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+			    echo "Deployment Finished ..."
+		    }
+	    }
+     }
+  }
